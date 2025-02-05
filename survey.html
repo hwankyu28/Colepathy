@@ -59,24 +59,26 @@
 
         /* 모바일 미디어 쿼리 */
         @media screen and (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-
             .container {
-                padding: 15px;
+                padding: 10px;
             }
 
             .question {
                 padding: 15px;
-                margin-bottom: 40px;
+                margin-bottom: 30px;
+                background-color: #fff;
+            }
+
+            .question p {
+                font-size: 1.2em;
+                margin-bottom: 15px;
             }
 
             .image-comparison {
                 flex-direction: column;
                 align-items: center;
-                gap: 15px;
-                margin: 20px 0;
+                gap: 10px;
+                margin: 10px 0;
                 width: 100%;
             }
 
@@ -85,24 +87,25 @@
                 justify-content: center;
                 gap: 8px;
                 width: 100%;
-                padding: 0 10px;
+                padding: 0;
                 box-sizing: border-box;
             }
 
             .image-container {
-                width: 48%;
+                width: 45%;
                 max-width: none;
                 height: auto;
-                aspect-ratio: 4/3;
+                aspect-ratio: 1/1;
                 margin: 0;
+                border-radius: 4px;
             }
 
             .likert-scale {
-                width: 90%;
-                margin: 10px 0;
+                width: 100%;
+                margin: 5px 0;
                 padding: 5px 0;
                 order: 2;
-                transform: scale(0.9);
+                transform: scale(0.85);
                 justify-content: space-between;
                 background-color: white;
                 border-radius: 10px;
@@ -115,19 +118,19 @@
             }
 
             .likert-option input[type="radio"] {
-                width: 20px;
-                height: 20px;
-                margin: 0 0 8px 0;
+                width: 16px;
+                height: 16px;
+                margin: 0 0 4px 0;
             }
 
             .likert-option label {
-                font-size: 0.8em;
+                font-size: 0.75em;
                 width: auto;
                 margin-top: 0;
             }
 
             .likert-option label span {
-                font-size: 0.75em;
+                font-size: 0.7em;
                 margin: 1px 0;
             }
 
@@ -152,18 +155,22 @@
                 gap: 5px;
             }
 
+            .image-container {
+                width: 47%;
+            }
+
             .likert-scale {
-                transform: scale(0.85);
-                width: 95%;
+                transform: scale(0.8);
+                width: 100%;
             }
 
             .likert-option input[type="radio"] {
-                width: 18px;
-                height: 18px;
+                width: 14px;
+                height: 14px;
             }
 
             .likert-option label {
-                font-size: 0.75em;
+                font-size: 0.7em;
             }
         }
 
@@ -325,8 +332,13 @@
             <div class="question">
                 <p>2. 등산</p>
                 <div class="image-comparison">
-                    <div class="image-container left">
-                        <img id="q2-left" src="" alt="왼쪽 이미지" class="comparison-image">
+                    <div class="image-wrapper">
+                        <div class="image-container left">
+                            <img id="q2-left" src="" alt="왼쪽 이미지" class="comparison-image">
+                        </div>
+                        <div class="image-container right">
+                            <img id="q2-right" src="" alt="오른쪽 이미지" class="comparison-image">
+                        </div>
                     </div>
                     <div class="likert-scale">
                         <div class="likert-option">
@@ -362,9 +374,6 @@
                                 <span>오른쪽 선호</span>
                             </label>
                         </div>
-                    </div>
-                    <div class="image-container right">
-                        <img id="q2-right" src="" alt="오른쪽 이미지" class="comparison-image">
                     </div>
                 </div>
             </div>
