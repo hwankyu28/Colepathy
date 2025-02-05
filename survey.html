@@ -61,12 +61,20 @@
         @media screen and (max-width: 768px) {
             .container {
                 padding: 10px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
             }
 
             .question {
                 padding: 15px;
                 margin-bottom: 30px;
                 background-color: #fff;
+                width: 100%;
+                max-width: 500px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
             }
 
             .question p {
@@ -80,6 +88,7 @@
                 gap: 10px;
                 margin: 10px 0;
                 width: 100%;
+                max-width: 450px;
             }
 
             .image-wrapper {
@@ -89,6 +98,7 @@
                 width: 100%;
                 padding: 0;
                 box-sizing: border-box;
+                margin: 0 auto;
             }
 
             .image-container {
@@ -98,6 +108,9 @@
                 aspect-ratio: 1/1;
                 margin: 0;
                 border-radius: 4px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
 
             .likert-scale {
@@ -109,6 +122,10 @@
                 justify-content: space-between;
                 background-color: white;
                 border-radius: 10px;
+                display: flex;
+                justify-content: center;
+                max-width: 400px;
+                margin: 10px auto;
             }
 
             .likert-option {
@@ -147,10 +164,38 @@
                 width: 100%;
                 max-width: 300px;
             }
+
+            /* 전체 컨텐츠 중앙 정렬 */
+            .content-wrapper {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                width: 100%;
+            }
+
+            /* 설명 텍스트 중앙 정렬 */
+            .description {
+                text-align: center;
+                max-width: 450px;
+                margin: 0 auto 20px;
+            }
+
+            /* 제출 버튼 중앙 정렬 */
+            button[type="submit"] {
+                display: block;
+                margin: 20px auto;
+                width: 80%;
+                max-width: 300px;
+            }
         }
 
         /* 작은 모바일 화면 대응 */
         @media screen and (max-width: 375px) {
+            .question {
+                max-width: 100%;
+                padding: 10px;
+            }
+
             .image-wrapper {
                 gap: 5px;
             }
@@ -162,6 +207,7 @@
             .likert-scale {
                 transform: scale(0.8);
                 width: 100%;
+                max-width: 320px;
             }
 
             .likert-option input[type="radio"] {
@@ -381,8 +427,13 @@
             <div class="question">
                 <p>3. 스트레칭</p>
                 <div class="image-comparison">
-                    <div class="image-container left">
-                        <img id="q3-left" src="" alt="왼쪽 이미지" class="comparison-image">
+                    <div class="image-wrapper">
+                        <div class="image-container left">
+                            <img id="q3-left" src="" alt="왼쪽 이미지" class="comparison-image">
+                        </div>
+                        <div class="image-container right">
+                            <img id="q3-right" src="" alt="오른쪽 이미지" class="comparison-image">
+                        </div>
                     </div>
                     <div class="likert-scale">
                         <div class="likert-option">
@@ -418,9 +469,6 @@
                                 <span>오른쪽 선호</span>
                             </label>
                         </div>
-                    </div>
-                    <div class="image-container right">
-                        <img id="q3-right" src="" alt="오른쪽 이미지" class="comparison-image">
                     </div>
                 </div>
             </div>
