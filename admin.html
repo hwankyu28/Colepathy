@@ -305,6 +305,9 @@
         // 결과 로드 및 표시 함수 수정
         async function loadResults() {
             try {
+                const hasPermission = await checkPermissions();
+                if (!hasPermission) return;
+                
                 const snapshot = await db.collection('survey_results').get();
                 const results = [];
                 
@@ -370,7 +373,7 @@
                     <td>${result.userInfo.gender || '성별 없음'}</td>
                     <td>${preferenceScore.toFixed(1)}점</td>
                     <td><button onclick="showDetails(${index})">상세보기</button></td>
-                    <td><button class="delete-btn" onclick="deleteResult('${result.id}')">삭제</button></td>
+                    <td><button class="delete-btn" onclick="deleteResult('${result.id}')" style="background-color: #ff4444;">삭제</button></td>
                 `;
             });
         }
@@ -436,17 +439,23 @@
             }
         }
 
-        // 개별 결과 삭제
+        // 결과 삭제 함수 수정
         async function deleteResult(docId) {
-            if (confirm('이 응답을 삭제하시겠습니까?')) {
-                try {
-                    await db.collection('survey_results').doc(docId).delete();
-                    alert('응답이 삭제되었습니다.');
-                    loadResults();
-                } catch (error) {
-                    console.error('삭제 중 오류:', error);
-                    alert('삭제 중 오류가 발생했습니다: ' + error.message);
-                }
+            if (!confirm('정말 이 응답을 삭제하시겠습니까?')) {
+                return;
+            }
+            
+            try {
+                const docRef = db.collection('survey_results').doc(docId);
+                await docRef.delete();
+                
+                // UI 업데이트
+                await loadResults();
+                alert('응답이 성공적으로 삭제되었습니다.');
+                
+            } catch (error) {
+                console.error('삭제 중 오류:', error);
+                alert('삭제 중 오류가 발생했습니다: ' + error.message);
             }
         }
         
@@ -754,6 +763,18 @@
             
             analysisHTML += '</div>';
             document.getElementById('analysisResults').innerHTML = analysisHTML;
+        }
+
+        // Firestore 규칙 설정 확인
+        async function checkPermissions() {
+            try {
+                const testDoc = await db.collection('survey_results').limit(1).get();
+                return true;
+            } catch (error) {
+                console.error('권한 확인 중 오류:', error);
+                alert('관리자 권한이 없습니다. Firebase 규칙을 확인해주세요.');
+                return false;
+            }
         }
     </script>
 </body>
