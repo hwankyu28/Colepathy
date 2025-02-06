@@ -231,7 +231,7 @@
             <thead>
                 <tr>
                     <th>응답일시</th>
-                    <th>이름</th>
+                    <th>응답번호</th>
                     <th>나이</th>
                     <th>성별</th>
                     <th>평균 선호도</th>
@@ -307,6 +307,7 @@
             try {
                 const snapshot = await firebase.firestore()
                     .collection('survey_results')
+                    .orderBy('timestamp', 'asc')
                     .get();
                 
                 const results = [];
@@ -353,9 +354,9 @@
             tbody.innerHTML = '';
 
             results.forEach((result, index) => {
+                const testNumber = `test${index + 1}`;
                 const row = tbody.insertRow();
                 
-                // id 필드 추가 확인
                 if (!result.id && result.docId) {
                     result.id = result.docId;
                 }
@@ -374,7 +375,7 @@
                 
                 row.innerHTML = `
                     <td>${formattedDate}</td>
-                    <td>${result.userInfo.name || '이름 없음'}</td>
+                    <td>${testNumber}</td>
                     <td>${result.userInfo.age || '나이 없음'}</td>
                     <td>${result.userInfo.gender || '성별 없음'}</td>
                     <td>${preferenceScore.toFixed(1)}점</td>
