@@ -305,20 +305,16 @@
         // 결과 로드 및 표시 함수 수정
         async function loadResults() {
             try {
-                const hasPermission = await checkPermissions();
-                if (!hasPermission) return;
+                const snapshot = await firebase.firestore()
+                    .collection('survey_results')
+                    .get();
                 
-                const snapshot = await db.collection('survey_results').get();
                 const results = [];
-                
                 snapshot.forEach(doc => {
-                    const data = doc.data();
-                    if (data.userInfo && data.surveyResults) {
-                        results.push({
-                            id: doc.id,
-                            ...data
-                        });
-                    }
+                    results.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
                 });
                 
                 if (results.length > 0) {
@@ -329,8 +325,12 @@
                     analyzeQuestionResults(results);
                 }
             } catch (error) {
-                console.error('데이터 로드 중 오류:', error);
-                alert('결과를 불러오는 중 오류가 발생했습니다.');
+                console.error('결과 로드 중 오류:', error);
+                if (error.code === 'permission-denied') {
+                    alert('데이터 접근 권한이 없습니다. Firebase 규칙을 확인해주세요.');
+                } else {
+                    alert('결과를 불러오는 중 오류가 발생했습니다.');
+                }
             }
         }
 
@@ -354,6 +354,12 @@
 
             results.forEach((result, index) => {
                 const row = tbody.insertRow();
+                
+                // id 필드 추가 확인
+                if (!result.id && result.docId) {
+                    result.id = result.docId;
+                }
+                
                 const preferenceScore = calculatePreferenceScore(result.surveyResults);
                 
                 // 타임스탬프 포맷팅
@@ -413,7 +419,9 @@
         // 상세 결과 표시 함수 수정
         async function showDetails(index) {
             try {
-                const snapshot = await db.collection('survey_results').get();
+                const snapshot = await firebase.firestore()
+                    .collection('survey_results')
+                    .get();
                 const results = [];
                 snapshot.forEach(doc => {
                     results.push(doc.data());
@@ -446,8 +454,10 @@
             }
             
             try {
-                const docRef = db.collection('survey_results').doc(docId);
-                await docRef.delete();
+                await firebase.firestore()
+                    .collection('survey_results')
+                    .doc(docId)
+                    .delete();
                 
                 // UI 업데이트
                 await loadResults();
@@ -455,7 +465,11 @@
                 
             } catch (error) {
                 console.error('삭제 중 오류:', error);
-                alert('삭제 중 오류가 발생했습니다: ' + error.message);
+                if (error.code === 'permission-denied') {
+                    alert('삭제 권한이 없습니다. Firebase 규칙을 확인해주세요.');
+                } else {
+                    alert('삭제 중 오류가 발생했습니다: ' + error.message);
+                }
             }
         }
         
@@ -463,8 +477,10 @@
         async function clearAllResults() {
             if (confirm('모든 설문 결과를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.')) {
                 try {
-                    const snapshot = await db.collection('survey_results').get();
-                    const batch = db.batch();
+                    const snapshot = await firebase.firestore()
+                        .collection('survey_results')
+                        .get();
+                    const batch = firebase.firestore().batch();
                     
                     snapshot.forEach(doc => {
                         batch.delete(doc.ref);
@@ -768,7 +784,10 @@
         // Firestore 규칙 설정 확인
         async function checkPermissions() {
             try {
-                const testDoc = await db.collection('survey_results').limit(1).get();
+                const testDoc = await firebase.firestore()
+                    .collection('survey_results')
+                    .limit(1)
+                    .get();
                 return true;
             } catch (error) {
                 console.error('권한 확인 중 오류:', error);
